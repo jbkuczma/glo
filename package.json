@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/jbkuczma/glo/issues"
   },
-  "homepage": "https://github.com/jbkuczma/glo#readme"
+  "homepage": "https://github.com/jbkuczma/glo#readme",
+  "devDependencies": {
+    "electron-reload": "^1.1.0"
+  }
 }

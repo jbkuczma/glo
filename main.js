@@ -7,13 +7,27 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+require('electron-reload')(__dirname)
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
+  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+  const maxWidthValue = 550
+  const minWidthValue = 400
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    minHeight: 400,
+    minWidth: minWidthValue,
+    maxWidth: maxWidthValue,
+    resizable: false,
+    maximizable: false,
+    fullscreenable: false
+  })
+
+  mainWindow.webContents.setUserAgent(userAgent)
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -23,15 +37,18 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', function (event) {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
+
     mainWindow = null
   })
+
+  // end of function
 }
 
 // This method will be called when Electron has finished
