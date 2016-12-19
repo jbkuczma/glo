@@ -1,23 +1,19 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+require('electron-reload')(__dirname) // allow for hot relaod of electron app
 
+const electron = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs')
+const config = require('./config')
 
-require('electron-reload')(__dirname)
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+const app = electron.app // Module to control application life.
+const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
 let mainWindow
 
 function createWindow () {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
   const maxWidthValue = 550
   const minWidthValue = 400
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
@@ -30,11 +26,13 @@ function createWindow () {
   mainWindow.webContents.setUserAgent(userAgent)
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, 'index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
+
+  mainWindow.loadURL('https://www.instagram.com')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -48,13 +46,39 @@ function createWindow () {
     mainWindow = null
   })
 
-  // end of function
+  return mainWindow
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+function createDevelopmentWindow() {
+  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+  const maxWidthValue = 550
+  const minWidthValue = 400
+  mainWindow = new BrowserWindow({
+    minHeight: 400,
+    minWidth: minWidthValue
+  })
+
+  mainWindow.webContents.setUserAgent(userAgent)
+
+  mainWindow.loadURL('https://www.instagram.com')
+
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools()
+
+  mainWindow.on('closed', function (event) {
+    mainWindow = null
+  })
+
+  return mainWindow
+}
+app.on('ready', () => {
+  console.log(config.dev)
+  var mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
+  const page = mainWindow.webContents
+
+  // insert dark mode css if toggled
+  
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -72,6 +96,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
