@@ -1,3 +1,42 @@
-._6ltyr._rnpza {
-	background-color: #000;
+/* Main Body */
+
+#react-root main {
+  background-color: #111a23 !important;
+  color: #c9cccf !important;
+}
+
+/* Photo container */
+
+._qj7yb article {
+  border-style: none !important;
+}
+
+._qj7yb header {
+  background-color: #111a23 !important;
+  color: #c9cccf !important;
+}
+
+._qj7yb a {
+  color: #c9cccf !important;
+}
+
+/* Photo */
+
+._22yr2, ._icyx7, ._e0mru {
+  border-style: none !important;
+  background-color: #111a23 !important;
+}
+
+
+/* Photo container likes */
+
+._tf9x3 {
+  color: #c9cccf !important;
+}
+
+/* Photo container comment section */
+
+._es1du {
+  background-color: #111a23 !important;
+  color: #c9cccf !important;
 }

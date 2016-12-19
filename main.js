@@ -72,11 +72,13 @@ function createDevelopmentWindow() {
   return mainWindow
 }
 app.on('ready', () => {
-  console.log(config.dev)
   var mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
-  // insert dark mode css if toggled
+  
+  page.on('dom-ready', () => {
+    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
+  })
   
 })
 
