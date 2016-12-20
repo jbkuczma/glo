@@ -87,6 +87,8 @@ app.on('ready', () => {
     if(config.isDarkMode){
       // go back to light mode
       // page.executeJavaScript(goBackToLightMode(), true)
+      page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+      config.isDarkMode = false
     } else {
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
       config.isDarkMode = true
@@ -118,9 +120,4 @@ function addBackArrowToNavBar(){
   // var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
   // var current = document.getElementById('_n7q2c')
   // console.log(current)
-}
-
-function goBackToLightMode() {
-  var linkNode = document.querySelector('link[href*="dark.css"]')
-  linkNode.parentNode.removeChild(linkNode)
 }
