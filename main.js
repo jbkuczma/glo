@@ -7,11 +7,26 @@ const fs = require('fs')
 const config = require('./config')
 
 const app = electron.app // Module to control application life.
+const globalShortcut = electron.globalShortcut
 const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
 let mainWindow
 
+// from: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
+const shouldQuit = app.makeSingleInstance( (commandLine, workingDirectory) => {
+  if(mainWindow){
+    if(mainWindow.isMinimized()) {
+      mainWindow.restore()
+    }
+    mainWindow.focus()
+  }
+})
+
+if(shouldQuit){
+  app.quit()
+}
+
 function createWindow () {
-  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' //mobile user agent. allows for the nav bar on Instagram's website
   const maxWidthValue = 550
   const minWidthValue = 400
   window = new BrowserWindow({
@@ -63,9 +78,21 @@ app.on('ready', () => {
   const page = mainWindow.webContents
 
   
-  page.on('dom-ready', () => {
-    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
+  // page.on('dom-ready', () => {
+  //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
+    
+  //   page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
+  // })
+  globalShortcut.register('CommandOrControl+D', () => {
+    if(config.isDarkMode){
+      // go back to light mode
+      // page.executeJavaScript(goBackToLightMode(), true)
+    } else {
+      page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
+      config.isDarkMode = true
+    }
   })
+
   
 })
 
@@ -85,3 +112,15 @@ app.on('activate', function () {
     mainWindow.show()
   }
 })
+
+// adds a back arrow svg to the nav bar
+function addBackArrowToNavBar(){
+  // var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
+  // var current = document.getElementById('_n7q2c')
+  // console.log(current)
+}
+
+function goBackToLightMode() {
+  var linkNode = document.querySelector('link[href*="dark.css"]')
+  linkNode.parentNode.removeChild(linkNode)
+}

@@ -1,5 +1,6 @@
 'use strict'
 
 module.exports = {
-  dev: true
+  dev: true,
+  isDarkMode: false
 }
