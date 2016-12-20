@@ -14,7 +14,7 @@ function createWindow () {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
   const maxWidthValue = 550
   const minWidthValue = 400
-  mainWindow = new BrowserWindow({
+  window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
     maxWidth: maxWidthValue,
@@ -23,27 +23,13 @@ function createWindow () {
     fullscreenable: false
   })
 
-  mainWindow.webContents.setUserAgent(userAgent)
-
-  // and load the index.html of the app.
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, 'index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
-
-  mainWindow.loadURL('https://www.instagram.com')
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  window.webContents.setUserAgent(userAgent)
+  window.loadURL('https://www.instagram.com')
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function (event) {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-
-    mainWindow = null
+  window.on('close', function (event) {
+    event.preventDefault()
+    app.hide()
   })
 
   return mainWindow
@@ -53,26 +39,27 @@ function createDevelopmentWindow() {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
   const maxWidthValue = 550
   const minWidthValue = 400
-  mainWindow = new BrowserWindow({
+  window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue
   })
 
-  mainWindow.webContents.setUserAgent(userAgent)
+  window.webContents.setUserAgent(userAgent)
 
-  mainWindow.loadURL('https://www.instagram.com')
+  window.loadURL('https://www.instagram.com')
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // Open DevTools.
+  window.webContents.openDevTools()
 
-  mainWindow.on('closed', function (event) {
-    mainWindow = null
+  window.on('close', function (event) {
+    event.preventDefault()
+    app.hide()
   })
 
-  return mainWindow
+  return window
 }
 app.on('ready', () => {
-  var mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
+  mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
   
@@ -91,10 +78,10 @@ app.on('window-all-closed', function () {
   }
 })
 
+// On OS X it's common to re-create a window in the app when the
+// dock icon is clicked and there are no other windows open.
 app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
+  if(process.platform === 'darwin'){
+    mainWindow.show()
   }
 })
