@@ -1,0 +1,8 @@
+/* Temp file to hold a gradient that I like. Might be used when creating app icon */
+
+.gradient {
+	background: -webkit-radial-gradient(farthest-corner at -10% 10%, #00cca3 5%, #8f08fd 100%); /* Safari 5.1 to 6.0 */
+    background: -o-radial-gradient(farthest-corner at -10% 10%, #00cca3 5%, #8f08fd 100%); /* For Opera 11.6 to 12.0 */
+    background: -moz-radial-gradient(farthest-corner at -10% 10%, #00cca3 5%, #8f08fd 100%); /* For Firefox 3.6 to 15 */
+    background: radial-gradient(farthest-corner at -10% 10%, #00cca3 5%, #8f08fd 100%); /* Standard syntax (must be last) */
+}

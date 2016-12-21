@@ -1,24 +1,35 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+require('electron-reload')(__dirname) // allow for hot relaod of electron app
 
+const electron = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs')
+const config = require('./config')
 
-require('electron-reload')(__dirname)
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+const app = electron.app // Module to control application life.
+const globalShortcut = electron.globalShortcut
+const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
 let mainWindow
 
+// from: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
+const shouldQuit = app.makeSingleInstance( (commandLine, workingDirectory) => {
+  if(mainWindow){
+    if(mainWindow.isMinimized()) {
+      mainWindow.restore()
+    }
+    mainWindow.focus()
+  }
+})
+
+if(shouldQuit){
+  app.quit()
+}
+
 function createWindow () {
-  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' //mobile user agent. allows for the nav bar on Instagram's website
   const maxWidthValue = 550
   const minWidthValue = 400
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
+  window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
     maxWidth: maxWidthValue,
@@ -27,34 +38,65 @@ function createWindow () {
     fullscreenable: false
   })
 
-  mainWindow.webContents.setUserAgent(userAgent)
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  window.webContents.setUserAgent(userAgent)
+  window.loadURL('https://www.instagram.com')
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function (event) {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-
-    mainWindow = null
+  window.on('close', function (event) {
+    event.preventDefault()
+    app.hide()
   })
 
-  // end of function
+  return mainWindow
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+function createDevelopmentWindow() {
+  const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+  const maxWidthValue = 550
+  const minWidthValue = 400
+  window = new BrowserWindow({
+    minHeight: 400,
+    minWidth: minWidthValue
+  })
+
+  window.webContents.setUserAgent(userAgent)
+
+  window.loadURL('https://www.instagram.com')
+
+  // Open DevTools.
+  window.webContents.openDevTools()
+
+  window.on('close', function (event) {
+    event.preventDefault()
+    if(process.platform === 'darwin'){
+      app.hide()
+    } else {
+      window.hide()
+    }
+  })
+
+  return window
+}
+app.on('ready', () => {
+  mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
+  const page = mainWindow.webContents
+
+  
+  // page.on('dom-ready', () => {
+  //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
+    
+  globalShortcut.register('CommandOrControl+D', () => {
+    if(config.isDarkMode){
+      page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+      config.isDarkMode = false
+    } else {
+      page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
+      config.isDarkMode = true
+    }
+  })
+
+  
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -65,13 +107,22 @@ app.on('window-all-closed', function () {
   }
 })
 
+// On OS X it's common to re-create a window in the app when the
+// dock icon is clicked and there are no other windows open.
 app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
+  if(process.platform === 'darwin'){
+    mainWindow.show()
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('before-quit', function () {
+    mainWindow.removeAllListeners('close');
+    mainWindow.close();
+});
+
+// adds a back arrow svg to the nav bar
+function addBackArrowToNavBar(){
+  // var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
+  // var current = document.getElementById('_n7q2c')
+  // console.log(current)
+}

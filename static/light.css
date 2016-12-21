@@ -1,0 +1,72 @@
+/* Hide 'open in app' button */
+._28zbs {
+  display: none;
+}
+
+/* Nav Bar */
+._bfc7q {
+  background-color: #F5F5F5 !important;
+}
+
+/* Nav Bar Icon */
+._r1svv {
+  filter: brightness(1) invert(0);
+  -webkit-filter: brightness(1) invert(0);
+}
+._r1svv:hover, ._r1svv:active {
+  opacity: 0.5;
+}
+
+
+/* Main Body */
+#react-root main {
+  background-color: #F5F5F5 !important;
+  color: #111d2e !important;
+}
+
+/* Photo container */
+._qj7yb article {
+  border-style: none !important;
+}
+
+._qj7yb header {
+  background-color: #F5F5F5 !important;
+  color: #111d2e !important;
+}
+
+/* user of comment */
+._qj7yb a {
+  color: #0b1420 !important;
+}
+
+/* user is mentioned in a comment */
+._nk46a span > a {
+  color: #4c8ccb !important;
+}
+
+/* Photo */
+._22yr2, ._icyx7, ._e0mru {
+  border-style: none !important;
+  background-color: #F5F5F5 !important;
+}
+
+
+/* Photo container likes */
+._tf9x3 {
+  color: #111d2e !important;
+}
+
+._iuf51 {
+  color: #111d2e !important;
+}
+
+/* Photo container comment section */
+._es1du {
+  background-color: #F5F5F5 !important;
+  color: #111d2e !important;
+}
+
+/* Comment input section */
+._k3t69 input {
+  color: #111d2e !important;
+}
