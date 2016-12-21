@@ -68,7 +68,11 @@ function createDevelopmentWindow() {
 
   window.on('close', function (event) {
     event.preventDefault()
-    app.hide()
+    if(process.platform === 'darwin'){
+      app.hide()
+    } else {
+      window.hide()
+    }
   })
 
   return window
@@ -81,12 +85,8 @@ app.on('ready', () => {
   // page.on('dom-ready', () => {
   //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
     
-  //   page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
-  // })
   globalShortcut.register('CommandOrControl+D', () => {
     if(config.isDarkMode){
-      // go back to light mode
-      // page.executeJavaScript(goBackToLightMode(), true)
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
       config.isDarkMode = false
     } else {
@@ -114,6 +114,11 @@ app.on('activate', function () {
     mainWindow.show()
   }
 })
+
+app.on('before-quit', function () {
+    mainWindow.removeAllListeners('close');
+    mainWindow.close();
+});
 
 // adds a back arrow svg to the nav bar
 function addBackArrowToNavBar(){
