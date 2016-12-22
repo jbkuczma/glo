@@ -9,6 +9,7 @@ const config = require('./config')
 const app = electron.app // Module to control application life.
 const globalShortcut = electron.globalShortcut
 const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
+
 let mainWindow
 
 // from: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
@@ -47,7 +48,7 @@ function createWindow () {
     app.hide()
   })
 
-  return mainWindow
+  return window
 }
 
 function createDevelopmentWindow() {
@@ -56,12 +57,17 @@ function createDevelopmentWindow() {
   const minWidthValue = 400
   window = new BrowserWindow({
     minHeight: 400,
-    minWidth: minWidthValue
+    minWidth: minWidthValue,
   })
 
   window.webContents.setUserAgent(userAgent)
 
   window.loadURL('https://www.instagram.com')
+  // this works instead of preload but there is a moment where the user can still see the default CSS
+  window.webContents.on('did-finish-load', () => {
+    window.webContents.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+  })
+  
 
   // Open DevTools.
   window.webContents.openDevTools()
@@ -81,7 +87,6 @@ app.on('ready', () => {
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
-  
   // page.on('dom-ready', () => {
   //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
     
@@ -121,8 +126,8 @@ app.on('before-quit', function () {
 });
 
 // adds a back arrow svg to the nav bar
-function addBackArrowToNavBar(){
-  // var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
-  // var current = document.getElementById('_n7q2c')
-  // console.log(current)
-}
+// function addBackArrowToNavBar(){
+//   var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
+//   var current = document.getElementById('_n7q2c')
+//   console.log(current)
+// }
