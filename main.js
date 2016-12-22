@@ -58,15 +58,13 @@ function createDevelopmentWindow() {
   window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
+    show: false
   })
 
   window.webContents.setUserAgent(userAgent)
 
   window.loadURL('https://www.instagram.com')
-  // this works instead of preload but there is a moment where the user can still see the default CSS
-  window.webContents.on('did-finish-load', () => {
-    window.webContents.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
-  })
+  
   
 
   // Open DevTools.
@@ -86,6 +84,12 @@ function createDevelopmentWindow() {
 app.on('ready', () => {
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
+
+  // default CSS is no longer seen. seems a bit slow
+  page.on('dom-ready', () => {
+    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+    mainWindow.show()
+  })
 
   // page.on('dom-ready', () => {
   //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
