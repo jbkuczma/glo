@@ -1,6 +1,35 @@
+/* Prevent window bouncing */
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+}
+
 /* Hide 'open in app' button */
 ._28zbs {
   display: none;
+}
+
+/* Hide header on login page */
+._rsurd, ._3o95g {
+  display: none;
+}
+._okmo7 {
+	visibility: hidden;
+}
+
+/* Hide footer */
+._oofbn {
+	display: none;
+}
+
+/* Hide 'Get the app' section */
+._m8ogu {
+	display: none;
 }
 
 /* Nav Bar */
@@ -68,5 +97,56 @@
 
 /* Comment input section */
 ._k3t69 input {
+  color: #111d2e !important;
+}
+
+/* User link for who liked your photo */
+._4zhc5 {
+  color: #0b1420 !important;
+}
+/* Text for who liked a photo of yours; in the like section */
+._auspy {
+  color: #111d2e !important;
+}
+
+/* User profile page text */
+._de9bg {
+  color: #111d2e !important;
+}
+/* Numbers on user's profile */
+._bkw5z {
+  color: #111d2e !important;
+}
+/* Link on user's profile */
+._56pjv {
+  color: #4c8ccb !important;
+}
+._bugdy > span > a {
+  color: #4c8ccb !important;
+}
+/* Load more button */
+._oidfu {
+  color: #4c8ccb !important;
+}
+._oidfu:hover {
+  opacity: 0.8;
+}
+
+/* List of followers */
+._q44m8, ._cx1ua {
+  background-color: #F5F5F5 !important;
+}
+/* Text for each follower in list */
+._2uju6, ._7z4zb {
+  color: #111d2e !important;
+}
+
+/* Search bar */
+._9x5sw, ._55bi1, ._o1o4h {
+  background-color: #F5F5F5 !important;
+  color: #111d2e !important;
+}
+/* Search dropdown */
+._qfezm {
   color: #111d2e !important;
 }
