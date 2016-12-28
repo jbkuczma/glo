@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jbkuczma/glo#readme",
   "devDependencies": {
+    "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0"
   }
 }
