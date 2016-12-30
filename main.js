@@ -5,6 +5,7 @@ const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const config = require('./config')
+const svg = require('./svg')
 
 const app = electron.app // Module to control application life.
 const globalShortcut = electron.globalShortcut
@@ -88,6 +89,7 @@ app.on('ready', () => {
   // default CSS is no longer seen. seems a bit slow
   page.on('dom-ready', () => {
     page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+    page.executeJavaScript(svg.addBackArrowToNavBar())
     mainWindow.show()
   })
 
@@ -131,6 +133,10 @@ app.on('before-quit', function () {
 
 // adds a back arrow svg to the nav bar
 // function addBackArrowToNavBar(){
+//   // const backArrowSVG = `
+//   //   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="80px" viewBox="0 0 50 80" xml:space="preserve">
+//   //     <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/>
+//   //   </svg>`
 //   var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
 //   var current = document.getElementById('_n7q2c')
 //   console.log(current)
