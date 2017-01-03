@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/glo.icns"
+    "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
   },
   "repository": {
     "type": "git",
