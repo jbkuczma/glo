@@ -159,3 +159,8 @@ body {
 ._76rrx p, h2 {
   color: #111d2e !important;
 }
+
+.back_button > a > svg {
+  display: block;
+  margin: auto;
+}
