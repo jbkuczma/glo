@@ -1,4 +1,4 @@
-require('electron-reload')(__dirname) // allow for hot relaod of electron app
+require('electron-reload')(__dirname) // allow for hot reload of electron app, remove when it comes time to build app
 
 const electron = require('electron')
 const path = require('path')
@@ -56,11 +56,15 @@ function createDevelopmentWindow() {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
   const maxWidthValue = 550
   const minWidthValue = 400
+  const icon = path.join(__dirname, 'static/icons/png/256x256.png')
   window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
     show: false,
-    preload: path.join(__dirname, 'ipc.js')
+    icon: icon,
+    webPreferences: {
+      preload: path.join(__dirname, 'ipc.js')
+    }
   })
 
   window.webContents.setUserAgent(userAgent)
@@ -87,16 +91,17 @@ app.on('ready', () => {
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
-  // default CSS is no longer seen. seems a bit slow
-  page.on('dom-ready', () => {
-    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
-    // page.executeJavaScript(svg.addBackArrowToNavBar())
-    mainWindow.show()
+  ipcMain.on('goBack', function(event, args) {
+    if(page.canGoBack()){
+      page.goBack()
+    }
   })
 
-  // page.on('dom-ready', () => {
-  //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
-    
+  page.on('dom-ready', () => {
+    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+    mainWindow.show()
+  })
+ 
   globalShortcut.register('CommandOrControl+D', () => {
     if(config.isDarkMode){
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
@@ -105,6 +110,12 @@ app.on('ready', () => {
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
       config.isDarkMode = true
     }
+  })
+
+  // might be used for keeping the nav bar from changing
+  page.on('did-navigate-in-page', function(event, url) {
+    event.preventDefault()
+    console.log(url)
   })
 
   
@@ -130,15 +141,4 @@ app.on('activate', function () {
 app.on('before-quit', function () {
     mainWindow.removeAllListeners('close');
     mainWindow.close();
-});
-
-// adds a back arrow svg to the nav bar
-// function addBackArrowToNavBar(){
-//   // const backArrowSVG = `
-//   //   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="80px" viewBox="0 0 50 80" xml:space="preserve">
-//   //     <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/>
-//   //   </svg>`
-//   var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
-//   var current = document.getElementById('_n7q2c')
-//   console.log(current)
-// }
+})

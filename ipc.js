@@ -31,21 +31,22 @@ function injectBackButton(navbar){
 
 
 	element.classList.add('_r1svv', 'back_button')
-	// link.classList.add('_gx3bg', 'back_button')
 	link.innerHTML = backArrowSVG
-	link.href = '/' // ToDo: change to go back to previous page
+
 	element.appendChild(link)
 	navbar.appendChild(element)
 
+	link.addEventListener('click', function(event) {
+		ipc.send('goBack')
+	})
+
 }
-// ipc.send('injectNavIcons', svg.addBackArrowToNavBar())
 
 function init(navbar){
 	injectBackButton(navbar)
 }
 
 document.addEventListener('DOMContentLoaded', function(event) {
-	// isElementReady('#react root ._onabe').then(init())
 	isElementReady('#react root ._onabe').then(
 		isElementReady('._n7q2c').then( element => {
 			init(element)
