@@ -5,10 +5,10 @@ const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const config = require('./config')
-const svg = require('./svg')
 
 const app = electron.app // Module to control application life.
 const globalShortcut = electron.globalShortcut
+const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
 
 let mainWindow
@@ -59,7 +59,8 @@ function createDevelopmentWindow() {
   window = new BrowserWindow({
     minHeight: 400,
     minWidth: minWidthValue,
-    show: false
+    show: false,
+    preload: path.join(__dirname, 'ipc.js')
   })
 
   window.webContents.setUserAgent(userAgent)
@@ -89,7 +90,7 @@ app.on('ready', () => {
   // default CSS is no longer seen. seems a bit slow
   page.on('dom-ready', () => {
     page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
-    page.executeJavaScript(svg.addBackArrowToNavBar())
+    // page.executeJavaScript(svg.addBackArrowToNavBar())
     mainWindow.show()
   })
 
