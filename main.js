@@ -1,15 +1,35 @@
-const electron = require('electron')
-const app = require('app')
-const BrowserWindow = require('browser-window')
-const ipcMain = require('ipc-main')
-const globalShortcut = require('global-shortcut')
+const {app, BrowserWindow, ipcMain, globalShortcut} = require('electron')
+// need these locally
+// const app = require('app')
+// const BrowserWindow = require('browser-window')
+// const ipcMain = require('ipc-main')
+// const globalShortcut = require('global-shortcut')
+//
 const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const config = require('./config')
 
+// let app
+// let globalShortcut
+// let ipcMain
+// let BrowserWindow
+
+// if(config.building === true){
+//   app = electron.app // Module to control application life.
+//   globalShortcut = electron.globalShortcut
+//   ipcMain = electron.ipcMain
+//   BrowserWindow = electron.BrowserWindow // Module to create native browser window.
+// } else {
+//   app = require('app')
+//   BrowserWindow = require('browser-window')
+//   ipcMain = require('ipc-main')
+//   globalShortcut = require('global-shortcut')
+// }
+
 // require('electron-reload')(__dirname)
 
+// need these for building
 // const app = electron.app // Module to control application life.
 // const globalShortcut = electron.globalShortcut
 // const ipcMain = electron.ipcMain
@@ -18,18 +38,18 @@ const config = require('./config')
 let mainWindow
 
 // from: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
-const shouldQuit = app.makeSingleInstance( (commandLine, workingDirectory) => {
-  if(mainWindow){
-    if(mainWindow.isMinimized()) {
-      mainWindow.restore()
-    }
-    mainWindow.focus()
-  }
-})
+// const shouldQuit = app.makeSingleInstance( (commandLine, workingDirectory) => {
+//   if(mainWindow){
+//     if(mainWindow.isMinimized()) {
+//       mainWindow.restore()
+//     }
+//     mainWindow.focus()
+//   }
+// })
 
-if(shouldQuit){
-  app.quit()
-}
+// if(shouldQuit){
+//   app.quit()
+// }
 
 function createWindow () {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' //mobile user agent. allows for the nav bar on Instagram's website
@@ -98,7 +118,6 @@ function createDevelopmentWindow() {
   return window
 }
 app.on('ready', () => {
-  console.log(config.dev)
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 

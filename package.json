@@ -4,6 +4,7 @@
   "description": "Unofficial desktop client for Instagram",
   "main": "main.js",
   "scripts": {
+    "start": "./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
   },
