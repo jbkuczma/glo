@@ -1,7 +1,7 @@
 'use strict'
 
 const electron = require('electron')
-const ipc = electron.ipcRenderer
+const ipc = require('ipc-renderer')
 
 function isElementReady(tag) {
 	const promise = new Promise(resolve => {
