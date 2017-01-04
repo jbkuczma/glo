@@ -4,8 +4,9 @@
   "description": "Unofficial desktop client for Instagram",
   "main": "main.js",
   "scripts": {
+    "dev": "node predev.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
+    "build-macOS": "node prebuild.js && electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
   },
   "repository": {
     "type": "git",
