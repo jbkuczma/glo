@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "./node_modules/.bin/electron .",
+    "dev": "dev=true npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
   },
