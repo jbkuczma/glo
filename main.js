@@ -4,7 +4,7 @@ const url = require('url')
 const fs = require('fs')
 const config = require('./config')
 
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 let mainWindow
 
