@@ -1,6 +1,4 @@
-'use strict'
-
 module.exports = {
-  dev: true,
-  isDarkMode: false
+  "dev": process.env.dev || false,
+  "isDarkMode": false
 }

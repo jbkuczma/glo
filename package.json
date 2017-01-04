@@ -1,10 +1,13 @@
 {
   "name": "glo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Unofficial desktop client for Instagram",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "./node_modules/.bin/electron .",
+    "dev": "dev=true npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-macOS": "electron-packager . --overwrite --asar --out=dist --platform=darwin --arch=x64 --icon=static/icons/glo.icns"
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,8 @@
   },
   "homepage": "https://github.com/jbkuczma/glo#readme",
   "devDependencies": {
+    "electron": "^1.4.13",
+    "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0"
   }
 }

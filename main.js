@@ -1,14 +1,11 @@
-require('electron-reload')(__dirname) // allow for hot relaod of electron app
-
-const electron = require('electron')
+const {app, BrowserWindow, ipcMain, globalShortcut} = require('electron')
 const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const config = require('./config')
 
-const app = electron.app // Module to control application life.
-const globalShortcut = electron.globalShortcut
-const BrowserWindow = electron.BrowserWindow // Module to create native browser window.
+require('electron-reload')(__dirname)
+
 let mainWindow
 
 // from: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
@@ -27,15 +24,25 @@ if(shouldQuit){
 
 function createWindow () {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' //mobile user agent. allows for the nav bar on Instagram's website
-  const maxWidthValue = 550
+  const minHeightValue = 400
   const minWidthValue = 400
+  const maxHeightValue = 915
+  const maxWidthValue = 700
+  const icon = path.join(__dirname, 'static/icons/png/256x256.png')
   window = new BrowserWindow({
-    minHeight: 400,
+    height: maxHeightValue,
+    width: maxWidthValue,
+    minHeight: minHeightValue,
     minWidth: minWidthValue,
+    maxHeight: maxHeightValue,
     maxWidth: maxWidthValue,
-    resizable: false,
     maximizable: false,
-    fullscreenable: false
+    fullscreenable: false,
+    show: false,
+    icon: icon,
+    webPreferences: {
+      preload: path.join(__dirname, 'ipc.js')
+    }
   })
 
   window.webContents.setUserAgent(userAgent)
@@ -47,22 +54,26 @@ function createWindow () {
     app.hide()
   })
 
-  return mainWindow
+  return window
 }
 
 function createDevelopmentWindow() {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
   const maxWidthValue = 550
   const minWidthValue = 400
+  const icon = path.join(__dirname, 'static/icons/png/256x256.png')
   window = new BrowserWindow({
     minHeight: 400,
-    minWidth: minWidthValue
+    minWidth: minWidthValue,
+    show: false,
+    icon: icon,
+    webPreferences: {
+      preload: path.join(__dirname, 'ipc.js')
+    }
   })
 
   window.webContents.setUserAgent(userAgent)
-
   window.loadURL('https://www.instagram.com')
-
   // Open DevTools.
   window.webContents.openDevTools()
 
@@ -81,10 +92,17 @@ app.on('ready', () => {
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
-  
-  // page.on('dom-ready', () => {
-  //   // insert back arrow svg into <div class "_n7q2c"> as a <div class "_r1svv">
-    
+  ipcMain.on('goBack', function(event, args) {
+    if(page.canGoBack()){
+      page.goBack()
+    }
+  })
+
+  page.on('dom-ready', () => {
+    page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
+    mainWindow.show()
+  })
+ 
   globalShortcut.register('CommandOrControl+D', () => {
     if(config.isDarkMode){
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
@@ -93,6 +111,12 @@ app.on('ready', () => {
       page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/dark.css'), 'utf-8'))
       config.isDarkMode = true
     }
+  })
+
+  // might be used for keeping the nav bar from changing
+  page.on('did-navigate-in-page', function(event, url) {
+    event.preventDefault()
+    console.log(url)
   })
 
   
@@ -118,11 +142,4 @@ app.on('activate', function () {
 app.on('before-quit', function () {
     mainWindow.removeAllListeners('close');
     mainWindow.close();
-});
-
-// adds a back arrow svg to the nav bar
-function addBackArrowToNavBar(){
-  // var backArrowHTML = "<div class="_r1svv"><a class="_gx3bg" href="/"><div class="_o5rm6 coreSpriteMobileNavHomeActive"></div></a></div>"
-  // var current = document.getElementById('_n7q2c')
-  // console.log(current)
-}
+})
