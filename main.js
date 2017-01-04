@@ -7,6 +7,7 @@ const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const config = require('./config')
+
 // require('electron-reload')(__dirname)
 
 // const app = electron.app // Module to control application life.
@@ -32,14 +33,18 @@ if(shouldQuit){
 
 function createWindow () {
   const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' //mobile user agent. allows for the nav bar on Instagram's website
-  const maxWidthValue = 550
+  const minHeightValue = 400
   const minWidthValue = 400
+  const maxHeightValue = 915
+  const maxWidthValue = 700
   const icon = path.join(__dirname, 'static/icons/png/256x256.png')
   window = new BrowserWindow({
-    minHeight: 400,
+    height: maxHeightValue,
+    width: maxWidthValue,
+    minHeight: minHeightValue,
     minWidth: minWidthValue,
+    maxHeight: maxHeightValue,
     maxWidth: maxWidthValue,
-    resizable: false,
     maximizable: false,
     fullscreenable: false,
     show: false,
@@ -77,11 +82,7 @@ function createDevelopmentWindow() {
   })
 
   window.webContents.setUserAgent(userAgent)
-
   window.loadURL('https://www.instagram.com')
-  
-  
-
   // Open DevTools.
   window.webContents.openDevTools()
 
@@ -97,6 +98,7 @@ function createDevelopmentWindow() {
   return window
 }
 app.on('ready', () => {
+  console.log(config.dev)
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 

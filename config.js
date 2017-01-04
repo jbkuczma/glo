@@ -1,4 +1,4 @@
 module.exports = {
-  "dev": true,
+  "dev": process.env.dev || false,
   "isDarkMode": false
 }
