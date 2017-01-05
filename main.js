@@ -92,11 +92,13 @@ app.on('ready', () => {
   mainWindow = (config.dev ? createDevelopmentWindow() : createWindow())
   const page = mainWindow.webContents
 
-  ipcMain.on('goBack', function(event, args) {
-    if(page.canGoBack()){
-      page.goBack()
-    }
-  })
+  // if i use the arrow svg
+  // ipcMain.on('goBack', function(event, args) {
+  //   if(page.canGoBack()){
+  //     page.goBack()
+  //   }
+  // })
+
 
   page.on('dom-ready', () => {
     page.insertCSS(fs.readFileSync(path.join(__dirname, '/static/light.css'), 'utf-8'))
@@ -113,10 +115,17 @@ app.on('ready', () => {
     }
   })
 
+  // keyboard command to go back
+  globalShortcut.register('CommandOrControl+B', () => {
+    if(page.canGoBack()){
+      page.goBack()
+    }
+  })
+
   // might be used for keeping the nav bar from changing
   page.on('did-navigate-in-page', function(event, url) {
     event.preventDefault()
-    console.log(url)
+    // console.log(url)
   })
 
   

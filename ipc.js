@@ -31,10 +31,14 @@ function injectBackButton(navbar){
 
 
 	element.classList.add('_r1svv', 'back_button')
+	link.classList.add('_gx3bg')
 	link.innerHTML = backArrowSVG
 
 	element.appendChild(link)
-	navbar.appendChild(element)
+	body.appendChild(element)
+	// navbar.appendChild(element)
+
+
 
 	link.addEventListener('click', function(event) {
 		ipc.send('goBack')
@@ -42,8 +46,18 @@ function injectBackButton(navbar){
 
 }
 
+function addListeners(){
+	var navBarElements = document.getElementsByClassName('_gx3bg')
+	for(var i = 0; i < navBarElements.length; i++){
+		navBarElements[i].addEventListener('click', function(){
+			console.log('want to navigate')
+		})
+	}
+}
+
 function init(navbar){
 	injectBackButton(navbar)
+	addListeners()
 }
 
 document.addEventListener('DOMContentLoaded', function(event) {
